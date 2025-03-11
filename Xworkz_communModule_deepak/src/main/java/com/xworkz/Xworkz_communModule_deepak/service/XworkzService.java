@@ -6,4 +6,10 @@ import org.springframework.ui.Model;
 public interface XworkzService {
 
     boolean validateAndSave(XworkzDto xworkzDto, Model model);
+
+    XworkzDto onSignin(String email, String password, Model model);
+
+    XworkzDto findByEmail(String email);
+
+    boolean updateByEmail(XworkzDto xworkzDto,Model model);
 }

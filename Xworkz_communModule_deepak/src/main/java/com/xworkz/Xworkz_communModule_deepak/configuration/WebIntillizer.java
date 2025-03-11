@@ -3,6 +3,11 @@ package com.xworkz.Xworkz_communModule_deepak.configuration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebIntillizer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    public WebIntillizer(){
+        System.out.println("WebInitilizer Created");
+    }
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[0];

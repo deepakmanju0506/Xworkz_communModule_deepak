@@ -64,6 +64,30 @@
         color: #333;
         padding: 5px;
     }
+    .btn-primary {
+      background-color: #007bff; /* Primary blue */
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3; /* Darker blue */
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
   </style>
 </head>
 <body>
@@ -79,48 +103,31 @@
   </header>
 
   <div class="container">
-    <h2 class="text-center mb-4">Enter your Details</h2>
-    <form action="signup" method="post">
+    <h2 class="text-center mb-4">Update your Details</h2>
+    <form action="updateUser" method="post">
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-user"></i></span>
-        <input type="text" class="form-control" name="userName" placeholder="Enter your username" required>
-        <c:if test="${not empty userNameError}">
-                            <div style="color: red;">
-                                <c:out value="${userNameError}" />
-                            </div>
-                        </c:if>
+        <input type="text" class="form-control" name="userName" placeholder="Enter your username" value="${dto.userName}">
+
       </div>
       <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
-        <input type="text" class="form-control" name="loginID" placeholder="Enter your login ID" required>
+        <input type="hidden" class="form-control" name="loginID" placeholder="Enter your login ID" value="${dto.loginID}" >
 
       </div>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-        <input type="text" class="form-control" name="email" placeholder="Enter your email">
-        <c:if test="${not empty emailError}">
-                                        <div style="color: red;">
-                                            <c:out value="${emailError}" />
-                                        </div>
-                                    </c:if>
+        <input type="text" class="form-control" name="email" placeholder="Enter your email" value="${dto.email}" readonly>
+
       </div>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-phone"></i></span>
-        <input type="text" class="form-control" name="phoneNo" placeholder="Enter your phone number" required>
-        <c:if test="${not empty phoneNoError}">
-                            <div style="color: red;">
-                                <c:out value="${phoneNoError}" />
-                            </div>
-                        </c:if>
+        <input type="text" class="form-control" name="phoneNo" placeholder="Enter your phone number" value="${dto.phoneNo}">
+
       </div>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-        <input type="password" class="form-control" name="passwords" placeholder="Enter your password" required>
-        <c:if test="${not empty passwordError}">
-                            <div style="color: red;">
-                                <c:out value="${passwordError}" />
-                            </div>
-                        </c:if>
+        <input type="password" class="form-control" name="passwords" placeholder="Enter your password"  >
+
       </div>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-lock"></i></span>
@@ -132,30 +139,17 @@
                                    </c:forEach>
                   </select>
       <div class="mb-3">
-        <label class="form-label">Gender:</label>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" value="male" required>
-          <label class="form-check-label">Male</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" value="female" required>
-          <label class="form-check-label">Female</label>
-        </div>
+      <input type="hidden" name="gender" value="${dto.gender}">
       </div>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
-        <input type="text" class="form-control" name="age" placeholder="Enter your age" required>
-        <c:if test="${not empty ageError}">
-                                        <div style="color: red;">
-                                            <c:out value="${ageError}" />
-                                        </div>
-                                    </c:if>
+        <input type="text" class="form-control" name="age" placeholder="Enter your age" value="${dto.age}" >
+
       </div>
       <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-        <input type="text" class="form-control" name="doB" required>
+        <input type="hidden" class="form-control" name="doB" value="${dto.doB}>
       </div>
-      <button type="submit" class="btn btn-primary w-100 mt-3">Submit</button>
+      <button type="submit" class="btn btn-primary w-100 mt-3">Update</button>
     </form>
   </div>
 

@@ -1,4 +1,4 @@
-
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,7 +58,7 @@
     </a>
     <div class="ms-auto">
           <a href="signup" class="btn btn-primary me-2">Sign Up</a>
-          <a href="signIn.jsp" class="btn btn-outline-primary">Sign In</a>
+          <a href="signin" class="btn btn-outline-primary">Sign In</a>
     </div>
   </header>
 

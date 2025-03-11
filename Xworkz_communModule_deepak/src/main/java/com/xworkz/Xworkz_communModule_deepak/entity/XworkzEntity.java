@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name="Signup_module_table")
+@Table(name="module_table")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedQuery(name ="getEmailAndPassword" ,query = "Select a from XworkzEntity a where a.email=:email")
+@NamedQuery(name = "getByEmail",  query = "select a From XworkzEntity a where a.email = :email")
+@NamedQuery(name="setByEmail", query="Update XworkzEntity a set a.userName = :userName, a.age = :age, a.doB = :doB, a.phoneNo = :phoneNo, a.location = :location, a.passwords = :passwords Where a.email = :email")
 public class XworkzEntity  {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +25,11 @@ public class XworkzEntity  {
 @Column(name="phoneNo")
     private Long phoneNo;
 @Column(name="passwords")
-    private String password;
-@Column(name="confirmPassword")
-    private String confirmPassword;
+    private String passwords;
 @Column(name="location")
     private String location;
+@Column(name = "email")
+private String email;
 @Column(name="gender")
     private String gender;
 @Column(name="age")

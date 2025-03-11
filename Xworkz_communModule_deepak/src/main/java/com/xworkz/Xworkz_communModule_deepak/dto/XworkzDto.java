@@ -23,6 +23,8 @@ public class XworkzDto {
 
     private String location;
 
+    private String email;
+
     private String gender;
 
     private Integer age;

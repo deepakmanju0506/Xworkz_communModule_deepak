@@ -24,10 +24,10 @@
         </head>
         <body>
             <div class="container">
-                <img src="https://img.icons8.com/?size=96&id=63312&format=png" alt="logo" height="80">
+                <img src="https://cdn-icons-png.freepik.com/256/7518/7518748.png?ga=GA1.1.1037929384.1741591870&semt=ais_hybrid" alt="logo" height="80">
                 <h2 class="mt-3">Success!</h2>
-                <p>Your SignUp was completed successfully.</p>
-                <a href="index" class="btn btn-primary">Go to Home</a>
+                <p>${email} Signin is successfull</p>
+                <a href="update?email=${email}" class="btn btn-primary">UPDATE</a>
             </div>
         </body>
         </html>

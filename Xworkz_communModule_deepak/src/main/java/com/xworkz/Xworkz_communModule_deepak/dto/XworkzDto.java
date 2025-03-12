@@ -15,7 +15,7 @@ public class XworkzDto {
 
     private Integer loginID;
 
-    private Long phoneNo;
+    private String phoneNo;
 
     private String passwords;
 

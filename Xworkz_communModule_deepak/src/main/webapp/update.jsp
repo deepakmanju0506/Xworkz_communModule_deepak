@@ -91,6 +91,9 @@
     </div>
     <div>
         <a href="updateUser?email=${email}">update user</a>
+          <a href="updateDetails?email=${email}">Update Profile</a>
+                         <a href="deleteData?email=${email}">Delete Account</a>
+                         <a href="index">Log out</a>
     </div>
 </body>
 

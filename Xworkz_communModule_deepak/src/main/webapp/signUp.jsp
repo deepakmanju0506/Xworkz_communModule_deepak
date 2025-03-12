@@ -83,7 +83,10 @@
     <form action="signup" method="post">
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-user"></i></span>
-        <input type="text" class="form-control" name="userName" placeholder="Enter your username" required>
+        <input type="text" class="form-control" name="userName" placeholder="Enter your username" value="${dto.userName}">
+        <c:if test="${not empty errorMessage}">
+                <p style="color: red;">${errorMessage}</p>
+        </c:if>
         <c:if test="${not empty userNameError}">
                             <div style="color: red;">
                                 <c:out value="${userNameError}" />
@@ -98,6 +101,9 @@
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
         <input type="text" class="form-control" name="email" placeholder="Enter your email">
+        <c:if test="${not empty errorMessage}">
+                        <p style="color: red;">${errorMessage}</p>
+                        </c:if>
         <c:if test="${not empty emailError}">
                                         <div style="color: red;">
                                             <c:out value="${emailError}" />
@@ -107,25 +113,16 @@
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-phone"></i></span>
         <input type="text" class="form-control" name="phoneNo" placeholder="Enter your phone number" required>
+        <c:if test="${not empty errorMessage}">
+                        <p style="color: red;">${errorMessage}</p>
+                        </c:if>
         <c:if test="${not empty phoneNoError}">
                             <div style="color: red;">
                                 <c:out value="${phoneNoError}" />
                             </div>
                         </c:if>
       </div>
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-        <input type="password" class="form-control" name="passwords" placeholder="Enter your password" required>
-        <c:if test="${not empty passwordError}">
-                            <div style="color: red;">
-                                <c:out value="${passwordError}" />
-                            </div>
-                        </c:if>
-      </div>
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-        <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password" required>
-      </div>
+
       <select id="dropdown" name="location">
                     <c:forEach items="${list}" var="loc">
                                      <option value="${loc}">${loc}</option>
@@ -145,6 +142,7 @@
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
         <input type="text" class="form-control" name="age" placeholder="Enter your age" required>
+
         <c:if test="${not empty ageError}">
                                         <div style="color: red;">
                                             <c:out value="${ageError}" />

@@ -1,6 +1,5 @@
 package com.xworkz.Xworkz_communModule_deepak.service;
 
-import com.xworkz.Xworkz_communModule_deepak.costants.LocationEnum;
 import com.xworkz.Xworkz_communModule_deepak.dto.XworkzDto;
 import com.xworkz.Xworkz_communModule_deepak.entity.XworkzEntity;
 import com.xworkz.Xworkz_communModule_deepak.repository.XworkzRepository;
@@ -9,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 public class XworkzServiceImpl implements XworkzService {
@@ -19,6 +21,28 @@ public class XworkzServiceImpl implements XworkzService {
     private BCryptPasswordEncoder encodedPassword = new BCryptPasswordEncoder();
 
     XworkzEntity xworkzEntity = new XworkzEntity();
+
+    String autoPassword;
+
+    public String passwordGenerate() {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+
+
+        String values = upper + lower + numbers;
+
+        Random rndm = new Random();
+
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 6; i++) {
+
+            password.append(values.charAt(rndm.nextInt(values.length())));
+
+        }
+        return password.toString();
+    }
 
 
     @Override
@@ -51,6 +75,7 @@ public class XworkzServiceImpl implements XworkzService {
             if (xworkzDto.getEmail() != null && xworkzDto.getEmail().contains("@gmail.com") && xworkzDto.getEmail().matches("^[a-z0-9]+@gmail\\.com$")) {
                 System.out.println("email valid");
 
+
             } else {
                 isValid = false;
                 model.addAttribute("emailError", "Email must be contain @ and gmail.com and use any numbers");
@@ -73,25 +98,18 @@ public class XworkzServiceImpl implements XworkzService {
                 model.addAttribute("age can't be null");
             }
 
-            if (xworkzDto.getPasswords().equals(xworkzDto.getConfirmPassword())) {
-                System.out.println("password and confirm password valid");
-
-            } else {
-                isValid = false;
-                System.out.println("password and confirm password Invalid");
-
-                model.addAttribute("passwordError", "Password must be at least 8 characters and must be contain Special character and Numbers");
-            }
         }
         System.out.println(isValid);
         if (isValid) {
+            autoPassword = passwordGenerate();
+            xworkzEntity.setPasswords(autoPassword);
+
             XworkzEntity xworkzEntity1 = new XworkzEntity();
             xworkzEntity1.setUserName(xworkzDto.getUserName());
             xworkzEntity1.setEmail(xworkzDto.getEmail());
             xworkzEntity1.setPhoneNo(xworkzDto.getPhoneNo());
-            String encoded = encodedPassword.encode(xworkzDto.getPasswords());
-            System.out.println(encoded);
-            xworkzEntity1.setPasswords(encoded);
+            xworkzEntity1.setPasswords(autoPassword);
+            System.out.println("Auto_Password :" + autoPassword);
             xworkzEntity1.setGender(xworkzDto.getGender());
             xworkzEntity1.setDoB(xworkzDto.getDoB());
             xworkzEntity1.setLocation(xworkzDto.getLocation());
@@ -107,19 +125,52 @@ public class XworkzServiceImpl implements XworkzService {
     }
 
     @Override
-    public XworkzDto onSignin(String email, String password, Model model) {
+    public XworkzEntity onSignin(String email, String passwords, Model model) {
         XworkzDto xworkzDto = new XworkzDto();
-        XworkzEntity moduleEntity = xworkzRepository.onSignin(email);
-        if (moduleEntity != null) {
-            if (encodedPassword.matches(password, moduleEntity.getPasswords())) {
-                BeanUtils.copyProperties(moduleEntity, xworkzDto);
-                System.out.println("SERVICE: " + moduleEntity);
-                return xworkzDto;
-            } else {
-                model.addAttribute("errorMessage", "Invalid Email or Password");
-            }
+        XworkzEntity xworkzEntity = xworkzRepository.onSignin(email);
+        if (xworkzEntity == null) {
+            return null;
         }
-        return null;
+        if (xworkzEntity.getLockTime() != null && accountLock(xworkzEntity.getLockTime())) {
+            xworkzEntity.setLockTime(null);
+            xworkzEntity.setSignInCount(0);
+            xworkzRepository.updateCount(xworkzEntity);
+        }
+        if (xworkzEntity.getSignInCount() == -1) {
+            return xworkzEntity;
+        } else if (xworkzEntity.getSignInCount() >= 3) {
+            model.addAttribute("errorMessage", "Account Lock");
+            xworkzEntity.setLockTime(LocalDateTime.now());
+            xworkzRepository.setLockTime(email, xworkzEntity);
+            return null;
+        } else if (encodedPassword.matches(passwords, xworkzEntity.getPasswords())) {
+            xworkzEntity.setSignInCount(0);
+            xworkzRepository.updateCount(xworkzEntity);
+            xworkzRepository.setLockTime(email, xworkzEntity);
+            return xworkzEntity;
+        } else {
+            int count = xworkzEntity.getSignInCount() + 1;
+            xworkzEntity.setSignInCount(count);
+            xworkzEntity.setLockTime(LocalDateTime.now());
+            xworkzRepository.updateCount(xworkzEntity);
+            xworkzRepository.setLockTime(email, xworkzEntity);
+            return null;
+        }
+    }
+    // userName exist method
+    @Override
+    public boolean userNameExist(String userName) {
+        return xworkzRepository.userNameExist(userName) > 0;
+    }
+//    User email exist method
+    @Override
+    public boolean userEmailExist(String email) {
+        return xworkzRepository.userEmailExist(email) > 0;
+    }
+
+    @Override
+    public long userPhoneNoExist(String phoneNo) {
+        return xworkzRepository.userPhoneNoExist(phoneNo);
     }
 
     @Override
@@ -183,10 +234,36 @@ public class XworkzServiceImpl implements XworkzService {
                 model.addAttribute("passwordError", "Password must be at least 8 characters and must be contain Special character and Numbers");
             }
 
-            return xworkzRepository.updateByEmail(xworkzEntity);
-
+            xworkzRepository.updateByEmail(xworkzEntity);
+            System.out.println("SERVICE UPDATE :" + xworkzDto);
         }
         return isValidate;
 
+    }
+
+    @Override
+    public boolean forgetPasswordUpdate(String email, String passwords, String confirmPassword) {
+        if (passwords.equals(confirmPassword)) {
+            XworkzEntity xworkzEntity = xworkzRepository.getDataForUpdate(email);
+            if (xworkzEntity != null) {
+                xworkzEntity.setPasswords(encodedPassword.encode(confirmPassword));
+                xworkzEntity.setSignInCount(0);
+                return xworkzRepository.forgetPasswordUpdate(xworkzEntity);
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean accountLock(LocalDateTime locktime) {
+
+        return locktime.plusMinutes(1).isBefore(LocalDateTime.now());
+
+    }
+
+    @Override
+    public void deleteUserByEmail(String email) {
+        xworkzRepository.deleteUserByEmail(email);
     }
 }

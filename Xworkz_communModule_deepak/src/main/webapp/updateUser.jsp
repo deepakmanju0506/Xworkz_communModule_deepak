@@ -147,8 +147,9 @@
 
       </div>
       <div class="input-group">
-        <input type="hidden" class="form-control" name="doB" value="${dto.doB}>
+        <input type="hidden" class="form-control" name="doB" value="${dto.doB}">
       </div>
+
       <button type="submit" class="btn btn-primary w-100 mt-3">Update</button>
     </form>
   </div>
